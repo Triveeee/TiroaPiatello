@@ -11,6 +11,7 @@ import java.io.IOException;
 public class App extends JFrame{
 
     private Image pistola [];
+    private Image background;
 
     private boolean checked = false;
     private boolean checkednull = false;
@@ -37,6 +38,7 @@ public class App extends JFrame{
         try {
             pistola[0] = ImageIO.read(new File("immagini/pistola1.png"));
             pistola[1] = ImageIO.read(new File("immagini/pistola2.png"));
+            background = ImageIO.read(new File("immagini/background.png"));
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -105,21 +107,24 @@ public class App extends JFrame{
 
             super.paintComponent(g);
             coment.setLocation(new Point(x - 10 , y - 10));
+            g.drawImage(background, 0, 0, getWidth(), getHeight(), Color.white, this);
 
             if(checked == false){
                 g.fillOval(x, y, 100, 100);
-                g.drawImage(pistola[0], (getWidth() / 2) - 350  , getHeight() - 430 , this);
+                if(checkednull == false){
+                    g.drawImage(pistola[0], (getWidth() / 2) - 350  , getHeight() - 430 , this);
+                }
             }
             else{
                 g.setColor(Color.RED);
                 g.fillOval(x, y, 120, 120);
-                g.clearRect((getWidth() / 2) - 150 , getHeight() - 150, pistola[0].getWidth(this) / 2, pistola[0].getHeight(this) / 2);
+                //g.clearRect((getWidth() / 2) - 150 , getHeight() - 150, pistola[0].getWidth(this) / 2, pistola[0].getHeight(this) / 2);
                 g.drawImage(pistola[1], (int) (getWidth() / 2) - 350  , getHeight() - 450 , this);
                 timer.stop();
             }
 
             if(checkednull == true){
-                g.clearRect((getWidth() / 2) - 150 , getHeight() - 150, pistola[0].getWidth(this) / 2 , pistola[0].getWidth(this) / 2);
+                //g.clearRect((getWidth() / 2) - 150 , getHeight() - 150, pistola[0].getWidth(this) / 2 , pistola[0].getWidth(this) / 2);
                 g.drawImage(pistola[1], (int) (getWidth() / 2) - 350  , getHeight() - 450 , this);
             }
 
