@@ -17,7 +17,7 @@ public class App extends JFrame{
     private boolean checkednull = false;
     private boolean reverse = false;
 
-    Rectangle rectangle = new Rectangle();
+    //Rectangle rectangle = new Rectangle();
 
     private JLabel coment = new JLabel("100");
     private JComboBox  <String> scelta  = new JComboBox <String>();
@@ -27,8 +27,12 @@ public class App extends JFrame{
     private Game game = new Game();
     private JSettingPanel settingpanel = new JSettingPanel();
 
-    private Timer timer = new Timer(1 , new GestioneEventi());
+    private Timer timer = new Timer(1 , new GestioneEventi()); 
     private Timer timer2 = new Timer(250 , new Action());
+
+    private int centro_x;
+    private int centro_y;
+    private int distanza;
 
 
 
@@ -54,15 +58,18 @@ public class App extends JFrame{
         container.add(game);
         container.add(settingpanel , BorderLayout.NORTH);
 
-        rectangle.setSize(new Dimension(100 , 100));
+        //rectangle.setSize(new Dimension(100 , 100));
     }
 
     public void addPoint(int add){
 
-        if(reverse == false)
+        if(reverse == false){
             x = x + add;
-        else
-            x = x - add; 
+        }
+        else{
+            x = x - add;
+        }
+        centro_x = x + 50;
     }
     public int setDifficult(String difficult) {
 
@@ -99,6 +106,8 @@ public class App extends JFrame{
             scelta.setPreferredSize(new Dimension(200 , 50));
             coment.setFont(font);
             coment.setVisible(false);
+
+
 
         }
 
@@ -140,6 +149,7 @@ public class App extends JFrame{
             
             y = (int) ((game.getHeight() - 100) / 2);
             addPoint(setDifficult(settingpanel.getChooise()));
+            centro_y = y + 50;
             if(x >= (getWidth() - 100)){
                 reverse = true;
             }
@@ -147,7 +157,7 @@ public class App extends JFrame{
                 reverse = false;
 
 
-            rectangle.setLocation(new Point(x , y));
+            //rectangle.setLocation(new Point(x , y));
             repaint();
         }
 
@@ -155,14 +165,25 @@ public class App extends JFrame{
 
     public class GestioneMouse extends MouseAdapter {
 
+
         @Override
         public void mousePressed(MouseEvent e) {
             // TODO Auto-generated method stub
+
+            distanza = (int) Math.sqrt(((centro_x - e.getPoint().getX()) * (centro_x - e.getPoint().getX())) + ((centro_y - e.getPoint().getY())*(centro_y - e.getPoint().getY())));
+            /*
             if(e.getSource().equals(game) && rectangle.contains(e.getPoint()) == false && settingpanel.getBullets() > 0){
                 checkednull = true;
                 timer2.start();
                 repaint();
             }
+            */
+            if(distanza > 50 && settingpanel.getBullets() > 0){
+                checkednull = true;
+                timer2.start();
+                repaint();
+            }
+            /*
             if(rectangle.contains(e.getPoint()) && settingpanel.getBullets() > 0){
                 settingpanel.setPoints(settingpanel.getPoints() + 100);
                 checked = true;
@@ -171,13 +192,22 @@ public class App extends JFrame{
                 timer.stop();
                 repaint();
         }
-        settingpanel.setBullets(settingpanel.getBullets() - 1);
+        */
+            if(distanza < 50 && settingpanel.getBullets() > 0){
+                settingpanel.setPoints(settingpanel.getPoints() + 100);
+                checked = true;
+                coment.setVisible(true);
+                timer2.start();
+                timer.stop();
+                repaint();
+            }
+
+            settingpanel.setBullets(settingpanel.getBullets() - 1);
         }
     }
 
 
     public class Action implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent e) {
             // TODO Auto-generated method stub
